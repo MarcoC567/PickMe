@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { registerUser, loginUser } from "./Database"; // Importiere Funktionen aus der Datenbank
+import { registerUser } from "./Database"; // Importiere Funktionen aus der Datenbank
 
-const LoginRegister = ({ navigation }) => {
+const Register = ({ navigation }) => {
   const [regUsername, setRegUsername] = useState("");
   const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
 
   const handleRegister = async () => {
     if (regUsername && regEmail && regPassword) {
@@ -15,24 +13,13 @@ const LoginRegister = ({ navigation }) => {
       if (result.success) {
         Alert.alert("Erfolg", "Registrierung erfolgreich!");
       } else {
-        Alert.alert("Fehler", result.message || "Registrierung fehlgeschlagen.");
+        Alert.alert(
+          "Fehler",
+          result.message || "Registrierung fehlgeschlagen."
+        );
       }
     } else {
       Alert.alert("Fehler", "Bitte füllen Sie alle Felder aus.");
-    }
-  };
-
-  const handleLogin = async () => {
-    if (loginEmail && loginPassword) {
-      const result = await loginUser(loginEmail, loginPassword);
-      if (result.success) {
-        Alert.alert("Erfolg", "Login erfolgreich!");
-        navigation.navigate("HomePage"); // Navigiert zur HomePage nach erfolgreichem Login
-      } else {
-        Alert.alert("Fehler", result.message || "Ungültige Anmeldedaten.");
-      }
-    } else {
-      Alert.alert("Fehler", "Bitte geben Sie Ihre Zugangsdaten ein.");
     }
   };
 
@@ -53,7 +40,7 @@ const LoginRegister = ({ navigation }) => {
         placeholder="E-Mail"
         value={regEmail}
         onChangeText={setRegEmail}
-        keyboardType="email-address"
+        // keyboardType="email-address"
       />
       <TextInput
         style={styles.input}
@@ -63,39 +50,6 @@ const LoginRegister = ({ navigation }) => {
         secureTextEntry
       />
       <Button title="Registrieren" onPress={handleRegister} />
-
-      {/* Login */}
-      <Text style={styles.sectionHeader}>Anmelden</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="E-Mail"
-        value={loginEmail}
-        onChangeText={setLoginEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Passwort"
-        value={loginPassword}
-        onChangeText={setLoginPassword}
-        secureTextEntry
-      />
-      <Button title="Anmelden" onPress={handleLogin} />
-
-      {/* Debug Button (Optional) */}
-      <Button
-        title="Debug Users (Datenbank)"
-        onPress={() => navigation.navigate("HomePage")}
-      />
-
-      {/* Navigation zur HomePage */}
-      <View style={styles.navButtonContainer}>
-        <Button
-          title="Zur HomePage"
-          onPress={() => navigation.navigate("HomePage")}
-          color="#2196F3"
-        />
-      </View>
     </View>
   );
 };
@@ -133,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginRegister;
+export default Register;
