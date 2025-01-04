@@ -7,6 +7,7 @@ import Register from "./Register";
 import HomePage from "./HomePage";
 import PreparedPackageDetails from "./PreparedPackageDetails";
 import RegionalPackageDetails from "./RegionalPackageDetails";
+import OrdersPage from "./Orders";
 import CustomPackage from "./CustomPackage";
 import { PaperProvider } from "react-native-paper";
 import Navbar from "./Navbar";
@@ -50,12 +51,19 @@ export default function App() {
           <Stack.Screen
             name="PreparedPackageDetails"
             component={PreparedPackageDetails}
+            options={{ title: "Vorgefertigte Pakete" }}
           />
           <Stack.Screen
             name="RegionalPackageDetails"
             component={RegionalPackageDetails}
+            options={{ title: "Regionale Pakete" }} // Hier kannst du den Titel ändern
           />
           <Stack.Screen name="CustomPackage" component={CustomPackage} />
+          <Stack.Screen
+            name="Orders"
+            component={OrdersPage}
+            options={{ title: "Bestellungen" }}
+          />
         </Stack.Navigator>
 
         {/* Navbar bekommt den isLoggedIn-Status und die Logout-Funktion */}

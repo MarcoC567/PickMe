@@ -10,7 +10,10 @@ const HomePage = () => {
   const preparedPackagesRef = useRef(null);
   const regionalPackagesRef = useRef(null);
 
-  // Daten für die Slider
+  // Intervall-IDs
+  const preparedInterval = useRef(null);
+  const regionalInterval = useRef(null);
+
   const preparedPackages = [
     {
       id: "1",
@@ -20,12 +23,12 @@ const HomePage = () => {
     {
       id: "2",
       name: "Familienpicknick",
-      image: require("./assets/family.jpg"),
+      image: require("./assets/family.png"),
     },
     {
       id: "3",
       name: "Abenteuerpicknick",
-      image: require("./assets/adventure.jpg"),
+      image: require("./assets/adventure.png"),
     },
   ];
 
@@ -33,21 +36,20 @@ const HomePage = () => {
     {
       id: "1",
       name: "Bayerisches Picknick",
-      image: require("./assets/bavarian.jpg"),
+      image: require("./assets/bavarian.png"),
     },
     {
       id: "2",
       name: "Französisches Picknick",
-      image: require("./assets/french.jpg"),
+      image: require("./assets/french.png"),
     },
     {
       id: "3",
       name: "Italienisches Picknick",
-      image: require("./assets/italian.jpg"),
+      image: require("./assets/italian.png"),
     },
   ];
 
-  // Render-Funktion für Slider-Items
   const renderSliderItem = (item, type) => (
     <TouchableOpacity
       onPress={() => {
@@ -79,31 +81,45 @@ const HomePage = () => {
     </TouchableOpacity>
   );
 
-  // Funktion zum automatischen Scrollen der FlatLists
-  const autoScrollCarousel = (listRef, dataLength) => {
+  const autoScrollCarousel = (listRef, dataLength, intervalRef) => {
     let currentIndex = 0;
 
-    setInterval(() => {
-      if (currentIndex < dataLength - 1) {
-        currentIndex += 1;
-      } else {
-        currentIndex = 0;
-      }
+    intervalRef.current = setInterval(() => {
+      // Sicherheitsprüfung: Ist die Referenz vorhanden?
+      if (listRef.current) {
+        if (currentIndex < dataLength - 1) {
+          currentIndex += 1;
+        } else {
+          currentIndex = 0;
+        }
 
-      listRef.current.scrollToIndex({ animated: true, index: currentIndex });
-    }, 10000); // Alle 5 Sekunden
+        // Scrolle zur entsprechenden Indexposition
+        listRef.current.scrollToIndex({ animated: true, index: currentIndex });
+      }
+    }, 5000); // Alle 5 Sekunden scrollen
   };
 
   useEffect(() => {
     if (preparedPackagesRef.current) {
-      autoScrollCarousel(preparedPackagesRef, preparedPackages.length);
+      autoScrollCarousel(
+        preparedPackagesRef,
+        preparedPackages.length,
+        preparedInterval
+      );
     }
     if (regionalPackagesRef.current) {
-      autoScrollCarousel(regionalPackagesRef, regionalPackages.length);
+      autoScrollCarousel(
+        regionalPackagesRef,
+        regionalPackages.length,
+        regionalInterval
+      );
     }
 
-    // Clean up on unmount
-    return () => clearInterval(autoScrollCarousel);
+    // Clean up Intervals beim Unmount
+    return () => {
+      if (preparedInterval.current) clearInterval(preparedInterval.current);
+      if (regionalInterval.current) clearInterval(regionalInterval.current);
+    };
   }, []);
 
   return (
@@ -119,7 +135,6 @@ const HomePage = () => {
         PickMe
       </Text>
 
-      {/* Slider für vorgefertigte Pakete */}
       <Text
         style={{
           fontSize: 18,
@@ -139,7 +154,6 @@ const HomePage = () => {
         ref={preparedPackagesRef}
       />
 
-      {/* Slider für regionale Pakete */}
       <Text
         style={{
           fontSize: 18,
@@ -159,7 +173,6 @@ const HomePage = () => {
         ref={regionalPackagesRef}
       />
 
-      {/* Button zum Erstellen eines eigenen Pakets */}
       <View style={{ marginVertical: 20, alignItems: "center" }}>
         <Button
           mode="contained"

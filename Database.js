@@ -184,3 +184,28 @@ export const insertRegistration = async (username, email, password) => {
     };
   }
 };
+
+// Funktion zum Abrufen der Bestellungen eines bestimmten Nutzers
+export const getOrdersByUser = async (userId, isAscending = true) => {
+  const db = await SQLite.openDatabaseAsync("PickMe");
+
+  try {
+    // Bestimmen der Sortierreihenfolge basierend auf dem Wert von isAscending
+    const orderBy = isAscending ? "ASC" : "DESC";
+
+    // SQL-Abfrage zum Abrufen der Bestellungen für den angegebenen user_id, sortiert nach Datum
+    const result = await db.getAllAsync(
+      `
+      SELECT * FROM "Order"
+      WHERE user_id = ?
+      ORDER BY date ${orderBy}
+    `,
+      [userId]
+    );
+
+    return result.rows._array; // Gibt die Bestellungen als Array zurück
+  } catch (error) {
+    console.error("Fehler beim Abrufen der Bestellungen:", error);
+    return [];
+  }
+};
