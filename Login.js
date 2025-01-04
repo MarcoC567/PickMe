@@ -3,7 +3,8 @@ import { View, Alert } from "react-native";
 import { Card, Text, TextInput, Button } from "react-native-paper";
 import { checkLoginCredentials } from "../PickMe/Database";
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, onLoginSuccess }) => {
+  // onLoginSuccess wird hier als Prop erwartet
   const [loginEmail, setLoginEmail] = React.useState("");
   const [loginPassword, setLoginPassword] = React.useState("");
 
@@ -14,9 +15,10 @@ const Login = ({ navigation }) => {
         const user = await checkLoginCredentials(loginEmail, loginPassword);
 
         if (user) {
-          // Falls Login erfolgreich ist, navigiere zur HomePage
+          // Falls Login erfolgreich ist, rufe onLoginSuccess auf
           Alert.alert("Erfolg", "Login erfolgreich!");
-          navigation.navigate("HomePage"); // Ändere hier den Navigationsziel je nach Bedarf
+          onLoginSuccess(); // Wir rufen die onLoginSuccess-Funktion auf, um den globalen Zustand zu ändern
+          navigation.navigate("HomePage"); // Weiter zur Startseite nach dem Login
         } else {
           // Falls Login fehlschlägt, zeige eine Fehlermeldung
           Alert.alert("Fehler", "Ungültige E-Mail oder Passwort.");
@@ -64,8 +66,8 @@ const Login = ({ navigation }) => {
           Anmelden
         </Button>
 
-        <Button mode="text" onPress={() => navigation.navigate("HomePage")}>
-          Zur HomePage
+        <Button mode="text" onPress={() => navigation.navigate("Register")}>
+          Zur Registrierung
         </Button>
       </Card>
     </View>
