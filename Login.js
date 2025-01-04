@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
-      <Card style={{ padding: 20 }}>
+      <Card style={{ padding: 20, marginBottom: 150 }}>
         <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
           Login
         </Text>

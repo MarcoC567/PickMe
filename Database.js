@@ -7,7 +7,7 @@ export const initDB = async () => {
     const db = await SQLite.openDatabaseAsync("PickMe");
     await db.execAsync(`
       CREATE TABLE IF NOT EXISTS User (
-        user_id INTEGER PRIMARY KEY NOT NULL UNIQUE,
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
         username TEXT NOT NULL,
         email TEXT NOT NULL,
         password TEXT NOT NULL
@@ -138,5 +138,49 @@ export const checkLoginCredentials = async (email, password) => {
   } catch (error) {
     console.log("Fehler bei der Anmeldung:", error);
     throw new Error("Es gab ein Problem bei der Anmeldung.");
+  }
+};
+
+export const insertRegistration = async (username, email, password) => {
+  const db = await SQLite.openDatabaseAsync("PickMe");
+  try {
+    // Prüfen, ob die E-Mail oder der Benutzername bereits existieren
+    const existingUser = await db.getFirstAsync(
+      "SELECT * FROM User WHERE username = ? OR email = ?",
+      [username, email]
+    );
+
+    if (existingUser) {
+      // Wenn die E-Mail oder der Benutzername bereits existieren, breche ab
+      return {
+        success: false,
+        message: "Benutzername oder E-Mail-Adresse existieren bereits.",
+      };
+    }
+
+    // Wenn die E-Mail und der Benutzername noch nicht existieren, füge sie ein
+    const result = await db.runAsync(
+      "INSERT INTO User (username, email, password) VALUES (?,?,?)",
+      [username, email, password]
+    );
+
+    // Hole das eingefügte Objekt basierend auf der letzten eingefügten ID
+    const insertedUser = await db.getFirstAsync(
+      "SELECT * FROM User WHERE user_id = ?",
+      [result.lastInsertRowId]
+    );
+
+    console.log("Eingefügter Benutzer:", insertedUser);
+
+    return {
+      success: true,
+      user: insertedUser, // Gebe das eingefügte Objekt zurück
+    };
+  } catch (error) {
+    console.log("Fehler bei der Registrierung:", error);
+    return {
+      success: false,
+      message: error.message,
+    };
   }
 };

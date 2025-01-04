@@ -1,17 +1,36 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { registerUser } from "./Database"; // Importiere Funktionen aus der Datenbank
+import { View, Alert } from "react-native";
+import { Card, Text, TextInput, Button } from "react-native-paper";
+import { insertRegistration } from "./Database"; // Importiere die Registrierung-Funktion aus der Datenbank
 
 const Register = ({ navigation }) => {
-  const [regUsername, setRegUsername] = useState("");
-  const [regEmail, setRegEmail] = useState("");
-  const [regPassword, setRegPassword] = useState("");
+  const [username, setRegUsername] = useState("");
+  const [email, setRegEmail] = useState("");
+  const [password, setRegPassword] = useState("");
 
   const handleRegister = async () => {
-    if (regUsername && regEmail && regPassword) {
-      const result = await registerUser(regUsername, regEmail, regPassword);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
+
+    if (!emailRegex.test(email)) {
+      Alert.alert("Fehler", "Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+      return; // Stoppt die Registrierung, wenn die E-Mail ungültig ist
+    }
+
+    if (!passwordRegex.test(password)) {
+      Alert.alert(
+        "Fehler",
+        "Das Passwort muss mindestens 8 Zeichen lang sein, einen Großbuchstaben und ein Sonderzeichen enthalten."
+      );
+      return; // Stoppt die Registrierung, wenn das Passwort ungültig ist
+    }
+
+    if (username && email && password) {
+      const result = await insertRegistration(username, email, password);
+
       if (result.success) {
-        Alert.alert("Erfolg", "Registrierung erfolgreich!");
+        Alert.alert("Registrierung erfolgreich!");
+        navigation.navigate("Login");
       } else {
         Alert.alert(
           "Fehler",
@@ -24,67 +43,51 @@ const Register = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Login und Registrierung</Text>
+    <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 20 }}>
+      <Card style={{ padding: 20, marginBottom: 150 }}>
+        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
+          Registrieren
+        </Text>
 
-      {/* Registrierung */}
-      <Text style={styles.sectionHeader}>Registrieren</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Benutzername"
-        value={regUsername}
-        onChangeText={setRegUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="E-Mail"
-        value={regEmail}
-        onChangeText={setRegEmail}
-        // keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Passwort"
-        value={regPassword}
-        onChangeText={setRegPassword}
-        secureTextEntry
-      />
-      <Button title="Registrieren" onPress={handleRegister} />
+        <TextInput
+          label="Benutzername"
+          value={username}
+          onChangeText={setRegUsername}
+          style={{ marginBottom: 20 }}
+        />
+        <TextInput
+          label="E-Mail"
+          value={email}
+          onChangeText={setRegEmail}
+          keyboardType="email-address"
+          style={{ marginBottom: 20 }}
+        />
+        <TextInput
+          label="Passwort"
+          value={password}
+          onChangeText={setRegPassword}
+          secureTextEntry
+          style={{ marginBottom: 20 }}
+        />
+
+        <Button
+          mode="contained"
+          onPress={handleRegister}
+          style={{ marginBottom: 10 }}
+        >
+          Registrieren
+        </Button>
+
+        <Button
+          mode="text"
+          onPress={() => navigation.navigate("Login")}
+          style={{ marginTop: 10, alignSelf: "center" }}
+        >
+          Bereits ein Konto? Anmelden
+        </Button>
+      </Card>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    backgroundColor: "#fff",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  sectionHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  input: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-  },
-  navButtonContainer: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-});
 
 export default Register;
