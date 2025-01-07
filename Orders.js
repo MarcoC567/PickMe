@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { Button, List, Divider } from "react-native-paper"; // react-native-paper Komponenten
-import { getOrdersByUser } from "./Database"; // Importiere die Bestell-Operationen
+import { getOrdersByUser, allOrders } from "./Database"; // Importiere die Bestell-Operationen
 
 const OrdersPage = ({ userId }) => {
   const [orders, setOrders] = useState([]);
@@ -16,7 +16,13 @@ const OrdersPage = ({ userId }) => {
   // Bestellungen vom Benutzer abrufen
   const fetchOrders = async () => {
     try {
+      if (!userId) {
+        console.log("Kein userId vorhanden");
+        return;
+      }
+      const TESTALLORDERS = await allOrders();
       const userOrders = await getOrdersByUser(userId, isAscending);
+      console.log("Bestellungen gefunden:", userOrders);
       setOrders(userOrders); // Die Bestellungen in den Zustand setzen
     } catch (error) {
       console.error("Fehler beim Abrufen der Bestellungen:", error);
@@ -25,8 +31,10 @@ const OrdersPage = ({ userId }) => {
 
   // useEffect um Bestellungen zu laden, wenn die Seite geladen wird
   useEffect(() => {
-    fetchOrders();
-  }, [isAscending]); // Abhängigkeit auf isAscending, um bei Änderung neu zu laden
+    if (userId) {
+      fetchOrders();
+    }
+  }, [userId, isAscending]); // Abhängigkeit auf userId und isAscending
 
   // Sortieren der Bestellungen nach Datum
   const sortOrders = () => {
@@ -65,21 +73,19 @@ const OrdersPage = ({ userId }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 10,
+    padding: 16,
+    backgroundColor: "#f8f8f8",
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 20,
-  },
-  sortButton: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   orderItem: {
-    padding: 15,
-    backgroundColor: "#f9f9f9",
+    paddingVertical: 8,
+  },
+  sortButton: {
+    marginBottom: 16,
   },
 });
 

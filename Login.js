@@ -4,7 +4,6 @@ import { Card, Text, TextInput, Button } from "react-native-paper";
 import { checkLoginCredentials } from "../PickMe/Database";
 
 const Login = ({ navigation, onLoginSuccess }) => {
-  // onLoginSuccess wird hier als Prop erwartet
   const [loginEmail, setLoginEmail] = React.useState("");
   const [loginPassword, setLoginPassword] = React.useState("");
 
@@ -15,9 +14,9 @@ const Login = ({ navigation, onLoginSuccess }) => {
         const user = await checkLoginCredentials(loginEmail, loginPassword);
 
         if (user) {
-          // Falls Login erfolgreich ist, rufe onLoginSuccess auf
+          // Falls Login erfolgreich ist, rufe onLoginSuccess auf und übergib die userId
           Alert.alert("Erfolg", "Login erfolgreich!");
-          onLoginSuccess(); // Wir rufen die onLoginSuccess-Funktion auf, um den globalen Zustand zu ändern
+          onLoginSuccess(user.user_id); // user.user_id übergeben
           navigation.navigate("HomePage"); // Weiter zur Startseite nach dem Login
         } else {
           // Falls Login fehlschlägt, zeige eine Fehlermeldung

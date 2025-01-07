@@ -16,6 +16,7 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null); // Füge den userId-Status hinzu
 
   useEffect(() => {
     const setupDatabase = async () => {
@@ -33,14 +34,20 @@ export default function App() {
   }, []);
 
   // Login- und Logout-Funktionen
-  const handleLoginSuccess = () => setIsLoggedIn(true); // Wenn der Benutzer erfolgreich eingeloggt ist
-  const handleLogout = () => setIsLoggedIn(false); // Logout Funktion
+  const handleLoginSuccess = (userId) => {
+    setIsLoggedIn(true); // Erfolgreich einloggen
+    setUserId(userId); // Speichere die userId
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserId(null); // Wenn ausgeloggt, userId zurücksetzen
+  };
 
   return (
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="HomePage">
-          {/* Übergabe von handleLoginSuccess als Prop an Login */}
           <Stack.Screen name="Login">
             {(props) => (
               <Login {...props} onLoginSuccess={handleLoginSuccess} />
@@ -56,17 +63,15 @@ export default function App() {
           <Stack.Screen
             name="RegionalPackageDetails"
             component={RegionalPackageDetails}
-            options={{ title: "Regionale Pakete" }} // Hier kannst du den Titel ändern
+            options={{ title: "Regionale Pakete" }}
           />
           <Stack.Screen name="CustomPackage" component={CustomPackage} />
-          <Stack.Screen
-            name="Orders"
-            component={OrdersPage}
-            options={{ title: "Bestellungen" }}
-          />
+          {/* Übergebe die userId an OrdersPage */}
+          <Stack.Screen name="Orders">
+            {(props) => <OrdersPage {...props} userId={userId} />}
+          </Stack.Screen>
         </Stack.Navigator>
 
-        {/* Navbar bekommt den isLoggedIn-Status und die Logout-Funktion */}
         <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       </NavigationContainer>
     </PaperProvider>

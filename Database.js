@@ -109,6 +109,7 @@ export const insertDB = async () => {
     INSERT OR IGNORE INTO "Order" (order_id, user_id, date, location) VALUES
     (1, 1, '2024-12-11', '123 Main St, Cityville'),
     (2, 2, '2024-12-10', '456 Elm St, Townsville');
+    (3, 1, '2024-12-12', '123 Main St, NEWVILLE');
     -- Insert into Payment
     INSERT OR IGNORE INTO Payment (payment_id, order_id, payment_date, payment_method, payment_status) VALUES
     (1, 1, '2024-12-11', 'Credit Card', 'Completed'),
@@ -123,6 +124,17 @@ export const insertDB = async () => {
   } catch (e) {
     console.log("error: ", e);
   }
+};
+
+export const allOrders = async () => {
+  const db = await SQLite.openDatabaseAsync("PickMe");
+
+  const result = await db.execAsync(
+    `
+     INSERT OR IGNORE INTO "Order" (order_id, user_id, date, location) VALUES
+     (3, 1, '2024-12-12', '123 Main St, NEWVILLE');`
+  );
+  return result;
 };
 
 export const checkLoginCredentials = async (email, password) => {
@@ -190,20 +202,27 @@ export const getOrdersByUser = async (userId, isAscending = true) => {
   const db = await SQLite.openDatabaseAsync("PickMe");
 
   try {
-    // Bestimmen der Sortierreihenfolge basierend auf dem Wert von isAscending
     const orderBy = isAscending ? "ASC" : "DESC";
 
-    // SQL-Abfrage zum Abrufen der Bestellungen für den angegebenen user_id, sortiert nach Datum
+    console.log(
+      "Abrufen der Bestellungen für user_id:",
+      userId,
+      "Sortierung:",
+      orderBy
+    );
+
     const result = await db.getAllAsync(
       `
       SELECT * FROM "Order"
       WHERE user_id = ?
       ORDER BY date ${orderBy}
-    `,
+      `,
       [userId]
     );
 
-    return result.rows._array; // Gibt die Bestellungen als Array zurück
+    console.log("Bestellungen gefunden:", result);
+
+    return result; // Erwartet direkt ein Array der Objekte
   } catch (error) {
     console.error("Fehler beim Abrufen der Bestellungen:", error);
     return [];
