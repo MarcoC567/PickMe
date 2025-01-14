@@ -21,6 +21,7 @@ const OrdersPage = ({ userId }) => {
         console.log("Kein userId vorhanden");
         return;
       }
+      const TESTALLORDERS = await allOrders();
       const userOrders = await getOrdersByUser(userId, isAscending); //getOrdersByUser - Datenbankoperation von Database.js
       console.log("Bestellungen gefunden:", userOrders);
       setOrders(userOrders);
