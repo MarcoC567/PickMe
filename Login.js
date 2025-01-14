@@ -1,38 +1,47 @@
 import React from "react";
 import { View, Alert } from "react-native";
-import { Card, Text, TextInput, Button } from "react-native-paper";
+import { Card, Text, TextInput, Button, HelperText } from "react-native-paper";
 import { checkLoginCredentials } from "../PickMe/Database";
 
 const Login = ({ navigation, onLoginSuccess }) => {
   const [loginEmail, setLoginEmail] = React.useState("");
   const [loginPassword, setLoginPassword] = React.useState("");
+  const [emailError, setEmailError] = React.useState(false);
+  const [passwordError, setPasswordError] = React.useState(false);
 
   const handleLogin = async () => {
     if (loginEmail && loginPassword) {
       try {
-        // Überprüfe die Login-Daten mit der checkLoginCredentials-Funktion
         const user = await checkLoginCredentials(loginEmail, loginPassword);
 
         if (user) {
-          // Falls Login erfolgreich ist, rufe onLoginSuccess auf und übergib die userId
           Alert.alert("Erfolg", "Login erfolgreich!");
-          onLoginSuccess(user.user_id); // user.user_id übergeben
-          navigation.navigate("HomePage"); // Weiter zur Startseite nach dem Login
+          onLoginSuccess(user.user_id);
+          navigation.navigate("HomePage");
         } else {
-          // Falls Login fehlschlägt, zeige eine Fehlermeldung
           Alert.alert("Fehler", "Ungültige E-Mail oder Passwort.");
         }
       } catch (error) {
-        // Falls ein Fehler auftritt, zeige eine generelle Fehlermeldung
         Alert.alert(
           "Fehler",
           error.message || "Es gab ein Problem bei der Anmeldung."
         );
       }
     } else {
-      // Wenn eines der Felder leer ist, zeige eine Fehlermeldung
+      if (!loginEmail) setEmailError(true);
+      if (!loginPassword) setPasswordError(true);
       Alert.alert("Fehler", "Bitte geben Sie Ihre Zugangsdaten ein.");
     }
+  };
+
+  const handleEmailBlur = () => {
+    if (!loginEmail) setEmailError(true);
+    else setEmailError(false);
+  };
+
+  const handlePasswordBlur = () => {
+    if (!loginPassword) setPasswordError(true);
+    else setPasswordError(false);
   };
 
   return (
@@ -46,16 +55,37 @@ const Login = ({ navigation, onLoginSuccess }) => {
           label="E-Mail"
           value={loginEmail}
           onChangeText={setLoginEmail}
+          onBlur={handleEmailBlur}
           keyboardType="email-address"
-          style={{ marginBottom: 20 }}
+          style={{
+            marginBottom: 10,
+            borderColor: emailError ? "red" : "transparent",
+            borderWidth: 1,
+          }}
         />
+        {emailError && (
+          <HelperText type="error" visible={emailError}>
+            Bitte geben Sie Ihre E-Mail ein.
+          </HelperText>
+        )}
+
         <TextInput
           label="Passwort"
           value={loginPassword}
           onChangeText={setLoginPassword}
+          onBlur={handlePasswordBlur}
           secureTextEntry
-          style={{ marginBottom: 20 }}
+          style={{
+            marginBottom: 10,
+            borderColor: passwordError ? "red" : "transparent",
+            borderWidth: 1,
+          }}
         />
+        {passwordError && (
+          <HelperText type="error" visible={passwordError}>
+            Bitte geben Sie Ihr Passwort ein.
+          </HelperText>
+        )}
 
         <Button
           mode="contained"

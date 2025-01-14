@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { Button, List, Divider } from "react-native-paper"; // react-native-paper Komponenten
-import { getOrdersByUser, allOrders } from "./Database"; // Importiere die Bestell-Operationen
+import { Button, List, Divider } from "react-native-paper";
+import { getOrdersByUser, allOrders } from "./Database";
 
 const OrdersPage = ({ userId }) => {
   const [orders, setOrders] = useState([]);
-  const [isAscending, setIsAscending] = useState(true); // Zustand für die Sortierung
+  const [isAscending, setIsAscending] = useState(true);
 
   // Bestellungen vom Benutzer abrufen
   const fetchOrders = async () => {
@@ -20,10 +20,9 @@ const OrdersPage = ({ userId }) => {
         console.log("Kein userId vorhanden");
         return;
       }
-      const TESTALLORDERS = await allOrders();
       const userOrders = await getOrdersByUser(userId, isAscending);
       console.log("Bestellungen gefunden:", userOrders);
-      setOrders(userOrders); // Die Bestellungen in den Zustand setzen
+      setOrders(userOrders);
     } catch (error) {
       console.error("Fehler beim Abrufen der Bestellungen:", error);
     }
@@ -34,11 +33,11 @@ const OrdersPage = ({ userId }) => {
     if (userId) {
       fetchOrders();
     }
-  }, [userId, isAscending]); // Abhängigkeit auf userId und isAscending
+  }, [userId, isAscending]);
 
   // Sortieren der Bestellungen nach Datum
   const sortOrders = () => {
-    setIsAscending(!isAscending); // Die Richtung der Sortierung umkehren
+    setIsAscending(!isAscending);
   };
 
   // Render-Funktion für jede Bestellung
@@ -53,19 +52,32 @@ const OrdersPage = ({ userId }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Bestellungen</Text>
+      {/* Bedingte Anzeige, wenn kein userId vorhanden ist */}
+      {!userId ? (
+        <Text style={styles.message}>
+          Melden Sie sich an, um Ihre Bestellungen zu sehen.
+        </Text>
+      ) : (
+        <>
+          <Text style={styles.header}>Bestellungen</Text>
 
-      {/* Button um Bestellungen nach Datum zu sortieren */}
-      <Button mode="contained" onPress={sortOrders} style={styles.sortButton}>
-        Nach Datum sortieren ({isAscending ? "Absteigend" : "Aufsteigend"})
-      </Button>
+          {/* Button um Bestellungen nach Datum zu sortieren */}
+          <Button
+            mode="contained"
+            onPress={sortOrders}
+            style={styles.sortButton}
+          >
+            Nach Datum sortieren ({isAscending ? "Absteigend" : "Aufsteigend"})
+          </Button>
 
-      <FlatList
-        data={orders}
-        keyExtractor={(item) => item.order_id.toString()}
-        renderItem={renderItem}
-        ItemSeparatorComponent={() => <Divider />} // Trenner zwischen den Listenelementen
-      />
+          <FlatList
+            data={orders}
+            keyExtractor={(item) => item.order_id.toString()}
+            renderItem={renderItem}
+            ItemSeparatorComponent={() => <Divider />}
+          />
+        </>
+      )}
     </View>
   );
 };
@@ -86,6 +98,12 @@ const styles = StyleSheet.create({
   },
   sortButton: {
     marginBottom: 16,
+  },
+  message: {
+    fontSize: 18,
+    color: "#555",
+    textAlign: "center",
+    marginTop: 20,
   },
 });
 

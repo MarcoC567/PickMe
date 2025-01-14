@@ -48,13 +48,21 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="HomePage">
-          <Stack.Screen name="Login">
+          <Stack.Screen name="Login" options={{ title: "" }}>
             {(props) => (
               <Login {...props} onLoginSuccess={handleLoginSuccess} />
             )}
           </Stack.Screen>
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="HomePage" component={HomePage} />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{ title: "" }}
+          />
+          <Stack.Screen
+            name="HomePage"
+            component={HomePage}
+            options={{ title: "" }}
+          />
           <Stack.Screen
             name="PreparedPackageDetails"
             component={PreparedPackageDetails}
@@ -67,8 +75,10 @@ export default function App() {
           />
           <Stack.Screen name="CustomPackage" component={CustomPackage} />
           {/* Übergebe die userId an OrdersPage */}
-          <Stack.Screen name="Orders">
-            {(props) => <OrdersPage {...props} userId={userId} />}
+          <Stack.Screen name="Orders" options={{ title: "" }}>
+            {(props) => (
+              <OrdersPage {...props} userId={userId} options={{ title: "" }} />
+            )}
           </Stack.Screen>
         </Stack.Navigator>
 
