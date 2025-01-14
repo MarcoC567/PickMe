@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
+//Navigationsleiste mit Icons
 const Navbar = ({ isLoggedIn, onLogout }) => {
   const navigation = useNavigation();
 

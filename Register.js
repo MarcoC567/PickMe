@@ -3,6 +3,7 @@ import { View, Alert } from "react-native";
 import { Card, Text, TextInput, Button, HelperText } from "react-native-paper";
 import { insertRegistration } from "./Database";
 
+//Registirierenpage
 const Register = ({ navigation }) => {
   const [username, setRegUsername] = useState("");
   const [email, setRegEmail] = useState("");
@@ -11,6 +12,7 @@ const Register = ({ navigation }) => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
+  //Regex um leichte validierung zu haben bei email und password
   const handleRegister = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
@@ -40,16 +42,18 @@ const Register = ({ navigation }) => {
     }
   };
 
+  //Feedback wenn nichts eingegeben wurde
   const handleUsernameBlur = () => {
     if (!username) setUsernameError(true);
     else setUsernameError(false);
   };
 
+  //Feedback wenn nichts eingegeben wurde
   const handleEmailBlur = () => {
     if (!email) setEmailError(true);
     else setEmailError(false);
   };
-
+  //Feedback wenn nichts eingegeben wurde
   const handlePasswordBlur = () => {
     if (!password) setPasswordError(true);
     else setPasswordError(false);

@@ -1,6 +1,6 @@
 import * as SQLite from "expo-sqlite";
 
-// Initialisiert die Datenbank
+// Initialisiert die Datenbanktabellen
 export const initDB = async () => {
   console.log("initDB");
   try {
@@ -76,6 +76,8 @@ export const initDB = async () => {
   }
   console.log("TESTEST");
 };
+
+//Setzt die Daten in die Datenbank
 export const insertDB = async () => {
   console.log("insert stuff");
   try {
@@ -137,6 +139,7 @@ export const allOrders = async () => {
   return result;
 };
 
+//Datenbankoperation in der geprüft wird ob die Credentials für einen Login in der Datenbank exestieren
 export const checkLoginCredentials = async (email, password) => {
   const db = await SQLite.openDatabaseAsync("PickMe");
 
@@ -153,6 +156,7 @@ export const checkLoginCredentials = async (email, password) => {
   }
 };
 
+//Datenbankoperation für die Registrierung eines neuen Users mit prüfung ob dieser schon vorhanden ist
 export const insertRegistration = async (username, email, password) => {
   const db = await SQLite.openDatabaseAsync("PickMe");
   try {

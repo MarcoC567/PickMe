@@ -9,6 +9,7 @@ import {
 import { Button, List, Divider } from "react-native-paper";
 import { getOrdersByUser, allOrders } from "./Database";
 
+//Bestellungspage in der man auf und absteigend sortieren kann
 const OrdersPage = ({ userId }) => {
   const [orders, setOrders] = useState([]);
   const [isAscending, setIsAscending] = useState(true);
@@ -20,7 +21,7 @@ const OrdersPage = ({ userId }) => {
         console.log("Kein userId vorhanden");
         return;
       }
-      const userOrders = await getOrdersByUser(userId, isAscending);
+      const userOrders = await getOrdersByUser(userId, isAscending); //getOrdersByUser - Datenbankoperation von Database.js
       console.log("Bestellungen gefunden:", userOrders);
       setOrders(userOrders);
     } catch (error) {

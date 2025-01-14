@@ -3,6 +3,7 @@ import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import { Card, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
+//Homepage
 const HomePage = () => {
   const navigation = useNavigation();
 
@@ -14,6 +15,7 @@ const HomePage = () => {
   const preparedInterval = useRef(null);
   const regionalInterval = useRef(null);
 
+  //Mockdatensätze für die Homepage
   const preparedPackages = [
     {
       id: "1",
@@ -32,6 +34,7 @@ const HomePage = () => {
     },
   ];
 
+  //Mockdatensätze für die Homepage
   const regionalPackages = [
     {
       id: "1",
@@ -50,6 +53,7 @@ const HomePage = () => {
     },
   ];
 
+  //Sliding mit der Maus
   const renderSliderItem = (item, type) => (
     <TouchableOpacity
       onPress={() => {
@@ -81,6 +85,7 @@ const HomePage = () => {
     </TouchableOpacity>
   );
 
+  // nach 5 sekunden wird autmoatisch gescrollt
   const autoScrollCarousel = (listRef, dataLength, intervalRef) => {
     let currentIndex = 0;
 
@@ -115,7 +120,7 @@ const HomePage = () => {
       );
     }
 
-    // Clean up Intervals beim Unmount
+    // Cleanup der Intervalle
     return () => {
       if (preparedInterval.current) clearInterval(preparedInterval.current);
       if (regionalInterval.current) clearInterval(regionalInterval.current);

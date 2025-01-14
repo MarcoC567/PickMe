@@ -8,7 +8,7 @@ import HomePage from "./HomePage";
 import PreparedPackageDetails from "./PreparedPackageDetails";
 import RegionalPackageDetails from "./RegionalPackageDetails";
 import OrdersPage from "./Orders";
-import CustomPackage from "./CustomPackage";
+// import CustomPackage from "./CustomPackage";
 import { PaperProvider } from "react-native-paper";
 import Navbar from "./Navbar";
 
@@ -21,7 +21,7 @@ export default function App() {
   useEffect(() => {
     const setupDatabase = async () => {
       try {
-        await initDB(); // Datenbank initialisieren
+        await initDB(); // SQLite Datenbank initialisieren
         console.log("Datenbank initialisiert");
         await insertDB(); // Beispiel-Daten einfügen
         console.log("Daten wurden eingefügt");
@@ -33,17 +33,17 @@ export default function App() {
     setupDatabase();
   }, []);
 
-  // Login- und Logout-Funktionen
+  // Loginfunktion
   const handleLoginSuccess = (userId) => {
     setIsLoggedIn(true); // Erfolgreich einloggen
     setUserId(userId); // Speichere die userId
   };
-
+  //Logoutfunktion
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserId(null); // Wenn ausgeloggt, userId zurücksetzen
   };
-
+  //Navigation durch die Seiten
   return (
     <PaperProvider>
       <NavigationContainer>
@@ -73,8 +73,8 @@ export default function App() {
             component={RegionalPackageDetails}
             options={{ title: "Regionale Pakete" }}
           />
-          <Stack.Screen name="CustomPackage" component={CustomPackage} />
-          {/* Übergebe die userId an OrdersPage */}
+          {/* <Stack.Screen name="CustomPackage" component={CustomPackage} /> */}
+
           <Stack.Screen name="Orders" options={{ title: "" }}>
             {(props) => (
               <OrdersPage {...props} userId={userId} options={{ title: "" }} />

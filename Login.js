@@ -3,16 +3,18 @@ import { View, Alert } from "react-native";
 import { Card, Text, TextInput, Button, HelperText } from "react-native-paper";
 import { checkLoginCredentials } from "../PickMe/Database";
 
+//Loginpage
 const Login = ({ navigation, onLoginSuccess }) => {
   const [loginEmail, setLoginEmail] = React.useState("");
   const [loginPassword, setLoginPassword] = React.useState("");
   const [emailError, setEmailError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
 
+  //eigentlicher Login mit Prüfung ob eingaben gemacht wurden
   const handleLogin = async () => {
     if (loginEmail && loginPassword) {
       try {
-        const user = await checkLoginCredentials(loginEmail, loginPassword);
+        const user = await checkLoginCredentials(loginEmail, loginPassword); //checkLoginCredentials - Datenbankoperation aus Database.js
 
         if (user) {
           Alert.alert("Erfolg", "Login erfolgreich!");
@@ -34,11 +36,13 @@ const Login = ({ navigation, onLoginSuccess }) => {
     }
   };
 
+  //Feedback wenn nichts eingegeben
   const handleEmailBlur = () => {
     if (!loginEmail) setEmailError(true);
     else setEmailError(false);
   };
 
+  //Feedback wenn nichts eingegeben
   const handlePasswordBlur = () => {
     if (!loginPassword) setPasswordError(true);
     else setPasswordError(false);

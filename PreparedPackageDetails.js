@@ -2,6 +2,7 @@ import React from "react";
 import { View, ScrollView } from "react-native";
 import { Card, Text, Divider, Button } from "react-native-paper";
 
+//Mockdaten für die Details der vorgefertigten Pakete
 const packages = [
   {
     id: "1",
@@ -32,6 +33,7 @@ const packages = [
   },
 ];
 
+//Anzeige der vorgefertigten Paketdetails
 const PreparedPackageDetails = ({ route, navigation }) => {
   const { packageId } = route.params;
 

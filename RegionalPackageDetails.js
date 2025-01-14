@@ -2,6 +2,7 @@ import React from "react";
 import { View, ScrollView } from "react-native";
 import { Card, Text, Divider, Button } from "react-native-paper";
 
+//Mockdaten für die Details der regionalen Pakete
 const regionalPackages = [
   {
     id: "1",
@@ -37,6 +38,7 @@ const regionalPackages = [
   },
 ];
 
+//anzeige der Regionalen Paketdetails
 const RegionalPackageDetails = ({ route, navigation }) => {
   const { packageId } = route.params;
 
