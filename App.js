@@ -8,7 +8,6 @@ import HomePage from "./HomePage";
 import PreparedPackageDetails from "./PreparedPackageDetails";
 import RegionalPackageDetails from "./RegionalPackageDetails";
 import OrdersPage from "./Orders";
-// import CustomPackage from "./CustomPackage";
 import { PaperProvider } from "react-native-paper";
 import Navbar from "./Navbar";
 
@@ -73,7 +72,6 @@ export default function App() {
             component={RegionalPackageDetails}
             options={{ title: "Regionale Pakete" }}
           />
-          {/* <Stack.Screen name="CustomPackage" component={CustomPackage} /> */}
 
           <Stack.Screen name="Orders" options={{ title: "" }}>
             {(props) => (
